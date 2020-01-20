@@ -7,6 +7,7 @@
 #define b 99
 
 int data[N];
+int temp_data[N];
 
 void print_data(int p[], int n)
 {
@@ -16,29 +17,55 @@ void print_data(int p[], int n)
     printf("\n");
 }
 
-int hill_sort(int p[], int n)
+int merge(int p[], int temp_p[], int start, int mid, int end)
 {
-    int gap = 1;
-    while (gap < n) {
-        gap = gap * 3 + 1;
+    printf("temp data is \t:\t");
+    for ( int s = start; s <= end; s++) {
+        temp_p[s] = p[s];
+        printf("%d\t", p[s]);
     }
-    printf("init gap is : %d\n", gap);
-    while (gap > 0) {
-        for (int i = gap; i < n; i++) {
-            int temp = p[i];
-            int j = i - gap;
-            while (j >= 0 && p[j] > temp) {
-                p[j + gap] = p[j];
-                j -= gap;
-            }
-            p[j + gap] = temp;
-            printf("current data is :\t");
-            print_data(p, n);
+    printf("\n");
+    
+    int left = start;
+    int right = mid + 1;
+
+    for (int k = start; k <= end; k++) {
+        if (left > mid) {
+            p[k] = temp_p[right++];
+        } else if (right > end) {
+            p[k] = temp_p[left++];
+        } else if (temp_p[left] > temp_p[right]) {
+            p[k] = temp_p[right++];
+        } else {
+            p[k] = temp_p[left++];
         }
-        gap = gap / 3;
-        printf("current gap is : %d\n", gap);
+    }
+}
+
+int merge_sort(int p[], int temp_p[], int start, int end)
+{
+    if (start >= end) {
+        return 0;
     }
 
+    int mid = start + (end - start) / 2;
+
+    /* start split left */
+    printf("start split left:\t%d - %d\n", start, mid);
+    merge_sort(p, temp_p, start, mid);
+
+    /* start split right */
+    printf("start split right:\t%d - %d\n", mid + 1, end);
+    merge_sort(p, temp_p, mid + 1, end);
+
+    /* start merge */
+    printf("start merge\t: %d - %d -%d\n", start, mid, end);
+    merge(p, temp_p, start, mid, end);
+
+    printf("current data is :\t");
+    print_data(p, N);
+
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -58,7 +85,7 @@ int main(int argc, char *argv[])
     print_data(data, N);
 
     /* start sorting */
-    hill_sort(data, N);
+    merge_sort(data, temp_data, 0, N-1);
 
     /* print sorted data */
     printf("sorted data is  :\t");
