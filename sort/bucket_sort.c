@@ -16,15 +16,32 @@ void print_data(int p[], int n)
     printf("\n");
 }
 
-int count_sort(int p[], int n)
+int bucket_sort(int p[], int n)
 {
     int max = p[0];
+    int min = p[0];
 
     for (int i = 1; i < n; i++) {
         if (p[i] > max) {
             max = p[i];
+        } else if (p[i] < min) {
+            min = p[i];
         }
     }
+
+    int diff = max - min;
+
+    float section = (float)diff / (float)(n - 1);
+
+    for (int i = 1; i < n; i++) {
+        int num = (int)(p[i] / section) - 1;
+        if (num < 0) {
+            num = 0;
+        }
+        
+    }
+
+
 
     char *count = malloc((size_t)(max + 1));
 
@@ -64,10 +81,11 @@ int main(int argc, char *argv[])
     print_data(data, N);
 
     /* start sorting */
-    count_sort(data, N);
+    bucket_sort(data, N);
 
     /* print sorted data */
     printf("sorted data is  :\t");
     print_data(data, N);
+    
     return 0;
 }

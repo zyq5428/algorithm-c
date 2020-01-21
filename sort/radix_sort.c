@@ -3,8 +3,8 @@
 #include <time.h>
 
 #define N 12
-#define a 0
-#define b 9
+#define a 100
+#define b 999
 
 int data[N];
 
